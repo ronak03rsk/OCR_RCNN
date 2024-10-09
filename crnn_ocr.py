@@ -40,7 +40,6 @@
 
 # print("Images and labels loaded and preprocessed.")
 
-
 import pandas as pd
 import cv2
 import numpy as np
@@ -78,7 +77,8 @@ for idx, row in data.iterrows():
     image_path = os.path.join(image_dir, row['image_name'])  # Replace 'image_name' with the actual column name
     label = str(row['label'])  # Ensure the label is a string
     
-    # print(f"Processing image: {image_path}")  # Debugging output to verify image paths
+    # Uncomment the following line for debugging
+    # print(f"Processing image: {image_path}")  
     image = preprocess_image(image_path)
     
     images.append(image)
@@ -129,7 +129,8 @@ model.add(Dropout(0.2))
 model.add(Dense(num_classes, activation='softmax'))  # Output layer with softmax activation
 
 # Compile the model
-model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
 # Train the model
-model.fit(images, to_categorical(encoded_labels), epochs=50, batch_size=32)  # Adjust the number of epochs and batch size
+model.fit(images, np.expand_dims(encoded_labels, -1), epochs=50, batch_size=32)  # Adjust the number of epochs and batch size
+
